@@ -110,6 +110,7 @@ interface Props {
   placeholder: string | undefined;
   value: string | undefined;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  disabled?: boolean;
 }
 
 function Input({
@@ -119,6 +120,7 @@ function Input({
   onChange,
   placeholder,
   value,
+  disabled,
 }: Props) {
   return (
     <Wrapper>
@@ -134,6 +136,7 @@ function Input({
           placeholder={placeholder}
           value={_.isNil(value) || _.toString(value).length === 0 ? "" : value}
           onChange={onChange}
+          disabled={disabled}
         />
         <Highlight />
       </Container>

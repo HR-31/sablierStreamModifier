@@ -4,6 +4,10 @@ import styled from "styled-components";
 import Account from "../src/components/Account";
 import Forms from "../src/components/Forms";
 import { useCallback, useEffect, useState } from "react";
+import LockupLinear from "../src/components/Forms/LockupLinear";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useAccount } from "wagmi";
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -37,7 +41,7 @@ const Disclaimer = styled.div`
   }
 `;
 
-interface Asset {
+export interface Asset {
   address: string;
   chainId: string;
   decimals: string;
@@ -49,7 +53,7 @@ interface Contract {
   address: string;
 }
 
-interface Stream {
+export interface Stream {
   id: string;
   alias: string;
   category: string;
@@ -66,16 +70,22 @@ interface Stream {
   asset: Asset;
   canceled: boolean;
   contract: Contract;
+  cliff: boolean;
+  cancelable: boolean;
   segments: any[]; // You may want to specify a more specific type for 'segments'
 }
 
 const CardGrid = styled.div`
   display: flex;
-  overflow-x: auto;
+  flex-wrap: wrap; // allows the items to wrap to the next line
+  align-items: flex-start; // optional, aligns items to the top
+  overflow-y: auto; // for vertical scrolling
   gap: 20px;
+  width: 100%; // takes up full width of the parent container
 `;
 
 const Card = styled.div`
+  flex: 0 0 calc(33.333% - 20px); // each card takes up 1/3 of the row, minus the gap
   background: #f0f0f0;
   padding: 20px;
   border: 1px solid #ccc;
@@ -103,43 +113,20 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-const StreamCards = ({ streams }: { streams: Stream[] }) => (
-  <CardGrid>
-    {streams &&
-      streams.map((stream, i) => {
-        console.log("stream: ", stream);
-        return (
-          <Card key={i}>
-            <CardTitle>{stream.alias}</CardTitle>
-            <CardSubtitle>{stream.asset.symbol}</CardSubtitle>
+const StreamCards = () => {
+  const router = useRouter();
+  const { address, isConnected } = useAccount();
 
-            <p style={{ margin: 2 }}>category: {stream.category}</p>
-            <p style={{ margin: 2 }}>streamId: {stream.tokenId}</p>
-            <p style={{ margin: 2 }}>chainId: {stream.chainId}</p>
-            <p style={{ margin: 2 }}>sender: {stream.sender}</p>
-            <p style={{ margin: 2 }}>recipient: {stream.recipient}</p>
-            <p style={{ margin: 2 }}>proxender: {stream.proxender}</p>
-            <p style={{ margin: 2 }}>proxied: {stream.proxied}</p>
-            <p style={{ margin: 2 }}>startTime: {stream.startTime}</p>
-            <p style={{ margin: 2 }}>endTime: {stream.endTime}</p>
-            <p style={{ margin: 2 }}>depositAmount: {stream.depositAmount}</p>
-            <p style={{ margin: 2 }}>
-              contract address: {stream.contract.address}
-            </p>
-            <p style={{ margin: 2 }}>symbol: {stream.asset.symbol}</p>
-            <p style={{ margin: 2 }}>canceled: {stream.canceled.toString()}</p>
+  const navigateToLockupLinearPage = (stream: Stream) => {
+    router.push({
+      pathname: "/lockup",
+      query: { stream: encodeURIComponent(JSON.stringify(stream)) },
+    });
+  };
 
-            {!stream.canceled && <Button>Edit</Button>}
-          </Card>
-        );
-      })}
-  </CardGrid>
-);
-
-function Home() {
   const [streams, setStreams] = useState<Stream[]>([]);
 
-  const fetchStreams = useCallback(async () => {
+  const fetchStreams = useCallback(async (proxender: string) => {
     const { data } = await fetch(
       `https://api.thegraph.com/subgraphs/name/sablier-labs/sablier-v2-goerli`,
       {
@@ -155,7 +142,7 @@ function Home() {
                 orderDirection: desc,
                 where:{
                   proxied:true,
-                  proxender:"0xde43f899587aaa2Ea6aD243F3d68a5027F2C6a94"
+                  proxender: "${proxender}"
                 }
               ) {
                 id
@@ -173,6 +160,7 @@ function Home() {
                 depositAmount
                 canceled
                 cliff
+                cancelable
                 asset {
                   address
                   chainId
@@ -201,28 +189,65 @@ function Home() {
   }, []);
 
   useEffect(() => {
-    fetchStreams();
-  }, [fetchStreams]);
+    if (isConnected && address) {
+      fetchStreams(address);
+    }
+  }, [isConnected, address, fetchStreams]);
 
+  if (!streams) {
+    return <h1>no streams</h1>;
+  }
+
+  return (
+    <CardGrid>
+      {streams.map((stream, i) => {
+        console.log("stream: ", stream);
+        return (
+          <Card key={i}>
+            <CardTitle>{stream.alias}</CardTitle>
+            <CardSubtitle>{stream.asset.symbol}</CardSubtitle>
+
+            <p style={{ margin: 2 }}>category: {stream.category}</p>
+            <p style={{ margin: 2 }}>streamId: {stream.tokenId}</p>
+            <p style={{ margin: 2 }}>chainId: {stream.chainId}</p>
+            <p style={{ margin: 2 }}>sender: {stream.sender}</p>
+            <p style={{ margin: 2 }}>recipient: {stream.recipient}</p>
+            <p style={{ margin: 2 }}>proxender: {stream.proxender}</p>
+            <p style={{ margin: 2 }}>proxied: {stream.proxied}</p>
+            <p style={{ margin: 2 }}>startTime: {stream.startTime}</p>
+            <p style={{ margin: 2 }}>endTime: {stream.endTime}</p>
+            <p style={{ margin: 2 }}>depositAmount: {stream.depositAmount}</p>
+            <p style={{ margin: 2 }}>
+              contract address: {stream.contract.address}
+            </p>
+            <p style={{ margin: 2 }}>symbol: {stream.asset.symbol}</p>
+            <p style={{ margin: 2 }}>canceled: {stream.canceled.toString()}</p>
+            <p style={{ margin: 2 }}>cliff: {stream.cliff.toString()}</p>
+
+            {!stream.canceled && (
+              <Button onClick={() => navigateToLockupLinearPage(stream)}>
+                Edit
+              </Button>
+            )}
+          </Card>
+        );
+      })}
+    </CardGrid>
+  );
+};
+
+function Home() {
   return (
     <Wrapper>
       <Disclaimer>
         <p>This Sablier V2 Sandbox is only available on Goerli.</p>
       </Disclaimer>
       <Container>
-        {streams && <StreamCards streams={streams} />}
-
         <Account />
-        <Forms />
+        <StreamCards />
       </Container>
     </Wrapper>
   );
 }
 
 export default Home;
-
-/*
-cancel
-lockupLinear: 0x6e3678c005815ab34986d8d66a353cd3699103de
-streamId: 
- */

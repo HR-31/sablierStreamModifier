@@ -1,4 +1,6 @@
 import type { Address as IViemAddress } from "wagmi";
+import { Asset } from "../../pages";
+import { WalletClient } from "viem";
 
 declare global {
   interface Window {
@@ -12,10 +14,35 @@ export type IAmount = bigint;
 export type IAmountWithDecimals = bigint;
 export type IAmountWithDecimals18 = bigint;
 
+export interface ICreateSignature {
+  amount: string;
+  token: Asset | undefined;
+  spender: IAddress | undefined;
+  chainId: number | undefined;
+  nonce: number;
+  signer: WalletClient;
+  permit2A: IAddress;
+}
+
+export interface IPermit2<T = undefined> {
+  permitSingle: {
+    details: {
+      amount: T extends undefined ? bigint : bigint | T;
+      expiration: T extends undefined ? number : number | T;
+      nonce: T extends undefined ? number : number | T;
+      token: T extends undefined ? IAddress : IAddress | T;
+    };
+    spender: T extends undefined ? IAddress : IAddress | T;
+    sigDeadline: T extends undefined ? bigint : bigint | T;
+  };
+  signature: T extends undefined ? IAddress : IAddress | T;
+}
+
 export interface IStoreFormLinear {
   logs: string[];
   error: string | undefined;
 
+  streamId: string | undefined;
   amount: string | undefined;
   cancelability: boolean;
   cliff: string | undefined;

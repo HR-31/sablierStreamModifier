@@ -68,6 +68,7 @@ export function Token() {
       onChange={onChange}
       format={"text"}
       placeholder={"Address of the asset..."}
+      disabled={true}
     />
   );
 }
@@ -147,6 +148,7 @@ export function Recipient() {
       onChange={onChange}
       format={"text"}
       placeholder={"Recipient 0x address..."}
+      disabled={true}
     />
   );
 }
@@ -184,43 +186,6 @@ export function Duration() {
       onChange={onChange}
       format={"text"}
       placeholder={"Duration in seconds e.g. 86400 (1 Day)..."}
-    />
-  );
-}
-
-export function Cliff() {
-  const { cliff, update } = useFormStore((state) => ({
-    cliff: state.cliff,
-    update: state.api.update,
-  }));
-
-  const onChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      const value = (() => {
-        const input = e.target.value;
-        if (_.isNil(input) || _.toString(input).length === 0) {
-          return "";
-        }
-        return _.toString(input);
-      })();
-
-      if (value !== "" && !new RegExp(REGEX_INTEGER).test(value)) {
-        return;
-      }
-
-      update({ cliff: value });
-    },
-    [update]
-  );
-
-  return (
-    <Input
-      label={"Cliff"}
-      id={"cliff"}
-      value={cliff}
-      onChange={onChange}
-      format={"text"}
-      placeholder={"Cliff in seconds e.g. 3600 (1 Hour)..."}
     />
   );
 }

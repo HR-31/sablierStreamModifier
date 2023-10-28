@@ -23,6 +23,7 @@ export const contracts = {
       "0x4be70ede968e9dba12db42b9869bec66bedc17d7" as IAddress,
     SablierV2ProxyTarget:
       "0x0eE01680645c361B740ab4dCDdF238988eB20411" as IAddress,
+    Permit2: "0x000000000022D473030F116dDEE9F6B43aC78BA3" as IAddress,
   },
 };
 
@@ -33,6 +34,11 @@ export const DAI = {
 export const REGEX_ADDRESS = /^[0-9xXAaBbCcDdEeFf]+$/;
 export const REGEX_FLOAT = /^[0-9]+[.,]?[0-9]+?$/;
 export const REGEX_INTEGER = /^[0-9]+$/;
+
+export const PERMIT_EXPIRATION = 30 * 24 * 60 * 60 * 1000;
+export const PERMIT_SIG_EXPIRATION = 30 * 60 * 1000;
+
+export const PERMIT2_DOMAIN_NAME = "Permit2";
 
 export const ERC20 = {
   abi: [

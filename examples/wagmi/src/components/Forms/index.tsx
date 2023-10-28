@@ -1,9 +1,8 @@
 import styled from "styled-components";
 import { useState } from "react";
 import LockupLinear from "./LockupLinear";
-import LockupDynamic from "./LockupDynamic";
-import Headless from "./Headless";
 import { useAccount } from "wagmi";
+import { Stream } from "../../../pages";
 
 const Wrapper = styled.div`
   display: flex;
@@ -66,7 +65,7 @@ const Tab = styled.div`
   }
 `;
 
-function Forms() {
+function Forms({ stream }: { stream: Stream }) {
   const [tab, setTab] = useState(0);
   const { isConnected } = useAccount();
 
@@ -81,7 +80,7 @@ function Forms() {
           <p>Lockup Linear</p>
         </Tab>
       </Tabs>
-      <LockupLinear />
+      <LockupLinear stream={stream} />
     </Wrapper>
   );
 }

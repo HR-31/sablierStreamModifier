@@ -6,24 +6,13 @@ const initial: Omit<IStoreFormLinear, "api"> = {
   error: undefined,
   logs: [],
 
+  streamId: undefined,
   amount: undefined,
   cancelability: true,
   cliff: undefined,
   duration: undefined,
   recipient: undefined,
   token: undefined,
-};
-
-const prefill: Omit<IStoreFormLinear, "api"> = {
-  error: undefined,
-  logs: [],
-
-  amount: "100",
-  cancelability: true,
-  cliff: undefined,
-  duration: "86400",
-  recipient: "0x727a6B434843120B9e0186064eb040032ad95f26",
-  token: "0x97cb342cf2f6ecf48c1285fb8668f5a4237bf862",
 };
 
 const useStoreForm = createWithEqualityFn<IStoreFormLinear>(
@@ -51,5 +40,5 @@ const useStoreForm = createWithEqualityFn<IStoreFormLinear>(
   shallow
 );
 
-export { initial, prefill };
+export { initial };
 export default useStoreForm;
