@@ -75,33 +75,40 @@ export interface Stream {
   segments: any[]; // You may want to specify a more specific type for 'segments'
 }
 
-const CardGrid = styled.div`
-  display: flex;
-  flex-wrap: wrap; // allows the items to wrap to the next line
-  align-items: flex-start; // optional, aligns items to the top
-  overflow-y: auto; // for vertical scrolling
-  gap: 20px;
-  width: 100%; // takes up full width of the parent container
-`;
-
 const Card = styled.div`
-  flex: 0 0 calc(33.333% - 20px); // each card takes up 1/3 of the row, minus the gap
-  background: #f0f0f0;
+  background: white;
   padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 10px;
 `;
 
-const CardTitle = styled.h2`
-  font-size: 1.5rem;
+const CardTitle = styled.h3`
   margin: 0;
+  padding: 0;
+  font-size: 1.2rem;
 `;
 
 const CardSubtitle = styled.p`
-  font-size: 1rem;
   margin: 10px 0;
+  font-size: 1rem;
   color: #777;
+`;
+
+const CardTime = styled.time`
+  font-size: 0.9rem;
+  color: #555;
+`;
+
+// Grid Styling
+const CardGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const Button = styled.button`
@@ -204,32 +211,38 @@ const StreamCards = () => {
         console.log("stream: ", stream);
         return (
           <Card key={i}>
-            <CardTitle>{stream.alias}</CardTitle>
+            <CardTitle>ID: {stream.tokenId}</CardTitle>
             <CardSubtitle>{stream.asset.symbol}</CardSubtitle>
-
-            <p style={{ margin: 2 }}>category: {stream.category}</p>
-            <p style={{ margin: 2 }}>streamId: {stream.tokenId}</p>
-            <p style={{ margin: 2 }}>chainId: {stream.chainId}</p>
-            <p style={{ margin: 2 }}>sender: {stream.sender}</p>
-            <p style={{ margin: 2 }}>recipient: {stream.recipient}</p>
-            <p style={{ margin: 2 }}>proxender: {stream.proxender}</p>
-            <p style={{ margin: 2 }}>proxied: {stream.proxied}</p>
-            <p style={{ margin: 2 }}>startTime: {stream.startTime}</p>
-            <p style={{ margin: 2 }}>endTime: {stream.endTime}</p>
-            <p style={{ margin: 2 }}>depositAmount: {stream.depositAmount}</p>
-            <p style={{ margin: 2 }}>
-              contract address: {stream.contract.address}
-            </p>
-            <p style={{ margin: 2 }}>symbol: {stream.asset.symbol}</p>
-            <p style={{ margin: 2 }}>canceled: {stream.canceled.toString()}</p>
-            <p style={{ margin: 2 }}>cliff: {stream.cliff.toString()}</p>
-
-            {!stream.canceled && (
-              <Button onClick={() => navigateToLockupLinearPage(stream)}>
-                Edit
-              </Button>
-            )}
+            <CardTime>hi</CardTime>
           </Card>
+
+          // <Card key={i}>
+          //   <CardTitle>{stream.alias}</CardTitle>
+          //   <CardSubtitle>{stream.asset.symbol}</CardSubtitle>
+
+          //   <p style={{ margin: 2 }}>category: {stream.category}</p>
+          //   <p style={{ margin: 2 }}>streamId: {stream.tokenId}</p>
+          //   <p style={{ margin: 2 }}>chainId: {stream.chainId}</p>
+          //   <p style={{ margin: 2 }}>sender: {stream.sender}</p>
+          //   <p style={{ margin: 2 }}>recipient: {stream.recipient}</p>
+          //   <p style={{ margin: 2 }}>proxender: {stream.proxender}</p>
+          //   <p style={{ margin: 2 }}>proxied: {stream.proxied}</p>
+          //   <p style={{ margin: 2 }}>startTime: {stream.startTime}</p>
+          //   <p style={{ margin: 2 }}>endTime: {stream.endTime}</p>
+          //   <p style={{ margin: 2 }}>depositAmount: {stream.depositAmount}</p>
+          //   <p style={{ margin: 2 }}>
+          //     contract address: {stream.contract.address}
+          //   </p>
+          //   <p style={{ margin: 2 }}>symbol: {stream.asset.symbol}</p>
+          //   <p style={{ margin: 2 }}>canceled: {stream.canceled.toString()}</p>
+          //   <p style={{ margin: 2 }}>cliff: {stream.cliff.toString()}</p>
+
+          //   {!stream.canceled && (
+          //     <Button onClick={() => navigateToLockupLinearPage(stream)}>
+          //       Edit
+          //     </Button>
+          //   )}
+          // </Card>
         );
       })}
     </CardGrid>
@@ -239,9 +252,6 @@ const StreamCards = () => {
 function Home() {
   return (
     <Wrapper>
-      <Disclaimer>
-        <p>This Sablier V2 Sandbox is only available on Goerli.</p>
-      </Disclaimer>
       <Container>
         <Account />
         <StreamCards />
