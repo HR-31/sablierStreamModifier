@@ -61,6 +61,8 @@ export type ICreateWithDurations = [
   broker: [account: IAddress, fee: 0n] // TIP: you can set this to your own address to charge a fee
 ];
 
+export type ICancelLiner = [lockup: IAddress, streamId: string];
+
 export type ICreateWithRange = [
   sender: IAddress,
   recipient: IAddress,

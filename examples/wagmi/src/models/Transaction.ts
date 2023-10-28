@@ -9,10 +9,13 @@ import type {
   ISegmentD,
   ICreateWithRange,
   IAddress,
+  ICancelLiner,
 } from "../types";
 import { CHAIN_GOERLI_ID, contracts, ERC20 } from "../constants";
 import SablierV2LockupLinear from "@sablier/v2-core/artifacts/SablierV2LockupLinear.json";
 import SablierV2LockupDynamic from "@sablier/v2-core/artifacts/SablierV2LockupDynamic.json";
+import ProxyAbi from "./Proxy.json";
+import ProxyTargetAbi from "./ProxyTarget.json";
 import { UserRejectedRequestError, zeroAddress } from "viem";
 import {
   getAccount,
@@ -21,6 +24,7 @@ import {
   waitForTransaction,
 } from "wagmi/actions";
 import BigNumber from "bignumber.js";
+import { encodeFunctionData } from "viem";
 
 BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_FLOOR });
 BigNumber.config({ EXPONENTIAL_AT: 1e9 });
@@ -121,6 +125,47 @@ export default class Transaction {
         functionName: "mint",
         args: [sender, amount],
       });
+    } catch (error) {
+      erroneous(error);
+    }
+  }
+
+  static async doCancelLinear(proxy: IAddress, streamId: string) {
+    try {
+      try {
+        // encode data
+        const data = encodeFunctionData({
+          abi: ProxyTargetAbi,
+          functionName: "cancel",
+          args: [contracts[CHAIN_GOERLI_ID].SablierV2LockupLinear, streamId],
+        });
+
+        const tx = await writeContract({
+          address: proxy,
+          abi: ProxyAbi,
+          functionName: "execute",
+          args: [
+            contracts[CHAIN_GOERLI_ID].SablierV2ProxyTarget, // target: address
+            data, // data: bytes
+          ],
+        });
+
+        if (tx.hash) {
+          console.log(
+            `LL Stream sent to the blockchain with hash: ${tx.hash}.`
+          );
+        }
+
+        const receipt = await waitForTransaction({ hash: tx.hash });
+
+        if (receipt?.status === "success") {
+          console.log(`LL Stream successfully created.`);
+        } else {
+          console.log(`LL Stream creation failed.`);
+        }
+      } catch (error) {
+        erroneous(error);
+      }
     } catch (error) {
       erroneous(error);
     }

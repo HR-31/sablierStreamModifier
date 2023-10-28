@@ -108,6 +108,21 @@ function LockupLinear() {
     }
   }, [isConnected]);
 
+  const onCancel = useCallback(async () => {
+    if (isConnected) {
+      const state = useStoreForm.getState();
+      try {
+        state.api.update({ error: undefined });
+        await Transaction.doCancelLinear(
+          "0x033995651Bb930d9C98254b058a7d4d442a5c4ba",
+          "335"
+        );
+      } catch (error) {
+        state.api.update({ error: _.toString(error) });
+      }
+    }
+  }, [isConnected]);
+
   const onPrefill = useCallback(() => {
     update(prefill);
   }, [update]);
@@ -127,6 +142,7 @@ function LockupLinear() {
         <div />
         <Button onClick={onApprove}>Approve token spending</Button>
         <Button onClick={onCreate}>Create stream</Button>
+        <Button onClick={onCancel}>Cancel stream 335</Button>
       </Actions>
       {error ? <Error>{error}</Error> : false}
       {logs.length ? (

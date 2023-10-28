@@ -80,16 +80,8 @@ function Forms() {
         <Tab data-active={tab === 0} onClick={() => setTab(0)}>
           <p>Lockup Linear</p>
         </Tab>
-        <Tab data-active={tab === 1} onClick={() => setTab(1)}>
-          <p>Lockup Dynamic</p>
-        </Tab>
-        <Tab data-active={tab === 2} onClick={() => setTab(2)}>
-          <p>Headless</p>
-        </Tab>
       </Tabs>
-      {tab === 0 ? <LockupLinear /> : false}
-      {tab === 1 ? <LockupDynamic /> : false}
-      {tab === 2 ? <Headless /> : false}
+      <LockupLinear />
     </Wrapper>
   );
 }
