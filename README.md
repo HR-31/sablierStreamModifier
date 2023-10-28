@@ -1,77 +1,55 @@
-![Sablier V2 Sandbox](/packages/assets/banner.png)
+# ![sablier2](https://github.com/loicdrbx/avalanche-rebalancer/assets/91540026/800c1be6-9db3-42de-9fce-3ea936288d0d) Stream Modifier
 
-# Sablier V2 Sandbox
+## Seamless Stream Editing on Sablier
 
-Front-end sandbox development environments for Sablier V2.
+## 🚀 Overview
 
-## Background
+Tired of the cumbersome process of editing existing streams on Sablier? Introducing our UX-focused solution that allows users to seamlessly edit their existing streams.
 
-Sablier is a smart contract protocol that enables trustless streaming of ERC-20 assets, which means
-the ability to make payments by the second.
+## 🤔 Why We're Different
 
-There are two types of streaming models in Sablier:
+We're here to tackle a massive pain point for users in the Sablier ecosystem. Our project brings you an intuitive frontend interface where you can select an existing stream and update its details like lockup amounts and durations effortlessly with a single backend call.
 
-- **LockupLinear**, abbreviated as **LL**, which creates streams with linear streaming functions
-- **LockupDynamic**, abbreviated as **LD**, which creates streams with dynamic streaming functions (examples: exponentials, logarithms, step functions)
+## 🎯 Problem We're Solving
 
-For more information, please refer to our [documentation](https://docs.sablier.com).
+Sablier V2 offers unique features like non-linear streaming and transferrable stream NFTs, but editing existing streams is still a hassle:
 
-It is worth noting that you can charge a service fee when creating a stream. This fee is a percentage of the stream's total value and is paid to your designated broker address. Check out the "broker" references in the code to see how this works, as well as this [guide](https://docs.sablier.com/concepts/protocol/fees) from our docs.
+- **Multiple Platforms**: The need to navigate through different websites for a single change.
+- **Confusing UX**: Often requiring direct contact with the founding team.
 
-## Environments and Examples
+## ✨ Solution
 
-![Sablier V2 Sandbox](/packages/assets/banner-s1.png)
+We present Stream Modifier, powered by Sablier, enabling effortless editing of streaming contracts in a single flow, minimising user effort while ensuring accuracy.
 
-### Ethers V6
+👌 Seamless UX: A user-friendly frontend for updating existing streams without canceling and recreating them.
 
-An integration of the [Sablier V2 Core](https://github.com/sablier-labs/v2-core) contracts into a frontend environment that uses [Ethers V6](https://docs.ethers.org/v6/). It's a small app that runs on the Goerli testnet and provides a wallet connection out of the box (Injected / Metamask).
+🔒 Secure: Utilises Sablier's core protocol, ensuring the same level of security.
 
-| Lockup Linear (Form)                       | Lockup Dynamic (Form)                       | Headless                             |
-| ------------------------------------------ | ------------------------------------------- | ------------------------------------ |
-| ![LL](./packages/assets/lockup-linear.png) | ![LD](./packages/assets/lockup-dynamic.png) | ![H](./packages/assets/headless.png) |
+📈 Efficiency: Streamlines the process, saving users both time and effort.
 
-#### Features
+## 🚀 Quick Start
 
-- Create a LL stream with Durations using the UI Form
-- Create a LD stream with Deltas using the UI Form
-- Create a LL stream with Durations in headless mode (tweak durations in code)
-- Create a LL stream with Range in headless mode (tweak dates/ranges in code)
-- Create a LD stream with Deltas in headless mode (tweak deltas in code)
-- Create a LD stream with Milestones in headless mode (tweak milestones in code)
-- Mint [testnet DAI](https://goerli.etherscan.io/token/0x97cb342cf2f6ecf48c1285fb8668f5a4237bf862) tokens
-- Approve spending DAI tokens for both the LL and LD contracts
+1. **Visit**: Navigate to our web portal.
+2. **Connect Wallet**: Use Sablier's existing auth methods for secure login.
+3. **Select Stream**: Pick the stream you wish to edit.
+4. **Edit Details**: Update the lockup amount and/or duration.
+5. **Confirm**: Review your changes and confirm!
 
-Most of the transaction magic happens in [`models/Transaction.ts`](/examples/ethers-v6/src/models/Transaction.ts). Have a look to understand how parameters are formatted (strings to Big Int, padding numbers with decimals, etc.) and sent to the contracts.
+## 🛠 Tech Stack
 
-For the **headless** mode, see [`constants/data.ts`](/examples/ethers-v6/src/constants/data.ts). Here, you'll be able to tweak the parameters to create streams of different values or shapes (segments).
+- Built on top of Sablier V2
+- Frontend in React and Typescript
+- Backend in Node.js
 
-#### Next steps
+## 🗺️ Roadmap
 
-In the UI Forms, you may find `Prefill form` buttons. Clicking on them will add pre-configured data into the fields as an example of what the data should look like.
+- Abstract wallet address and label streams with custom labels e.g employee name or employee ID
+- Send for approval function for stream changes outside of user permission level e.g send to HR manager for approval
+- Batch edit contracts
+- Share stream URL via email, whatsapp and other social media channels
 
-After you create a test stream, make sure to connect to our main [app.sablier.com](https://app.sablier.com) interface with your "sender" wallet to see what the stream [actually looks like](https://docs.sablier.com/apps/features#detailed-panels).
+## 📚 Background on Sablier
 
-| Payload (LD with two segments)            | Shape                                      |
-| ----------------------------------------- | ------------------------------------------ |
-| ![E](./packages/assets/emission-code.png) | ![E](./packages/assets/emission-shape.png) |
+Sablier V2, a next-generation streaming protocol, is known for its flagship Lockup design. It supports a plethora of features like Lockup Dynamic and Lockup Linear, each allowing for a range of streaming curves. Sablier V2 has already processed over $1B in cumulative payment volume, standing apart in a league of its own. [Learn more about Sablier V2](https://sablier.com).
 
----
-
-![Sablier V2 Sandbox](/packages/assets/banner-s2.png)
-
-### wagmi / viem
-
-The official Sablier interface uses [wagmi](wagmi.sh/) and [viem](https://viem.sh/). Both libraries offer top-notch support (check the docs and their github) and integrate nicely with things like RainbowKit.
-
-#### Features
-
-Same as the ones implemented in the [Ethers V6](#ethers-v6) sandbox.
-
-#### Opinionated Sandbox
-
-This current sandbox uses [wagmi's react context](https://wagmi.sh/react/getting-started) and configuration to set up the wallet connection (through an Injected Provider / Metamask). It then makes use of [wagmi's core actions](https://wagmi.sh/core/getting-started) to bundle contract interactions under the `Transaction` model.
-
-While this helps keep things similar to the way they're implemented in the Ethers V6 Sandbox, keep in mind that you can always choose to implement them differently. For example, using:
-
-- Viem, the Typescript library. It's pretty much a 1:1 replacement for ethers (see [migration](https://wagmi.sh/react/ethers-adapters) guide here). The aforementioned `wagmi/actions` (core actions) are more or less a wrapper around viem's utilities, with the additional benefit that the wallet and public clients are automatically sourced behind the scenes (you don't have to pass them manually).
-- Wagmi's hooks, for a more effect oriented React application
+## 🎉 Happy Streaming!
