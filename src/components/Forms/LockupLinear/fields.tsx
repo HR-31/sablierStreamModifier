@@ -180,7 +180,7 @@ export function Duration() {
 
   return (
     <Input
-      label={"Duration"}
+      label={"Duration (in seconds)"}
       id={"duration"}
       value={duration}
       onChange={onChange}

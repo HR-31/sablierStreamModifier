@@ -234,6 +234,8 @@ function LockupLinear({ stream }: { stream: Stream }) {
 
   return (
     <Wrapper>
+      <h1>ID: {stream.tokenId}</h1>
+
       <Cancelability />
       <Token />
       <Amount />
