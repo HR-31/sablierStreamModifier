@@ -8,6 +8,7 @@ import LockupLinear from "../src/components/Forms/LockupLinear";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useAccount } from "wagmi";
+import CardGrid from "../src/components/CardGrid";
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -101,7 +102,7 @@ const CardTime = styled.time`
 `;
 
 // Grid Styling
-const CardGrid = styled.div`
+const SCardGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
@@ -206,14 +207,20 @@ const StreamCards = () => {
   }
 
   return (
-    <CardGrid>
+    <SCardGrid>
       {streams.map((stream, i) => {
         console.log("stream: ", stream);
         return (
           <Card key={i}>
             <CardTitle>ID: {stream.tokenId}</CardTitle>
             <CardSubtitle>{stream.asset.symbol}</CardSubtitle>
-            <CardTime>hi</CardTime>
+            <CardTime>
+              {!stream.canceled && (
+                <Button onClick={() => navigateToLockupLinearPage(stream)}>
+                  Edit
+                </Button>
+              )}
+            </CardTime>
           </Card>
 
           // <Card key={i}>
@@ -245,7 +252,7 @@ const StreamCards = () => {
           // </Card>
         );
       })}
-    </CardGrid>
+    </SCardGrid>
   );
 };
 
@@ -253,6 +260,7 @@ function Home() {
   return (
     <Wrapper>
       <Container>
+        {/* <CardGrid /> */}
         <Account />
         <StreamCards />
       </Container>

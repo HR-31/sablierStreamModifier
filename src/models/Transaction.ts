@@ -141,6 +141,16 @@ export default class Transaction {
     }
   }
 
+  static async getNFT(streamId: string) {
+    const res = (await readContract({
+      address: contracts[CHAIN_GOERLI_ID].SablierV2LockupLinear as IAddress,
+      abi: SablierV2LockupLinear.abi,
+      functionName: "tokenURI",
+      args: [streamId],
+    })) as unknown as string;
+    return res;
+  }
+
   static async getNonce(
     ownerAddress: IAddress,
     tokenAddress: IAddress,

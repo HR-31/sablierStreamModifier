@@ -88,8 +88,8 @@ export function Amount() {
         }
         return _.toString(input);
       })();
-
-      if (value !== "" && !new RegExp(REGEX_FLOAT).test(value)) {
+      const regex = /^[0-9]+([.,][0-9]+)?$/;
+      if (value !== "" && !new RegExp(regex).test(value)) {
         return;
       }
 
