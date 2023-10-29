@@ -41,11 +41,7 @@ export default function CardGrid() {
                   orderBy: timestamp,
                   orderDirection: desc,
                   where:{
-                    or: [
-                      { proxender: "${proxender}" },
-                      { sender: "${proxender}" }
-                    ]
-                    
+                    proxender: "${proxender}"
                   }
                 ) {
                   id
