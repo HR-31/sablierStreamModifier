@@ -1,5 +1,4 @@
 import type { Address as IViemAddress } from "wagmi";
-import { Asset } from "../../pages";
 import { WalletClient } from "viem";
 
 declare global {
@@ -13,6 +12,39 @@ export type ISeconds = bigint;
 export type IAmount = bigint;
 export type IAmountWithDecimals = bigint;
 export type IAmountWithDecimals18 = bigint;
+
+export interface Asset {
+  address: string;
+  chainId: string;
+  decimals: string;
+  name: string;
+  symbol: string;
+}
+
+export interface Contract {
+  address: string;
+}
+
+export interface Stream {
+  id: string;
+  alias: string;
+  category: string;
+  tokenId: string;
+  chainId: string;
+  sender: string; // proxy
+  recipient: string;
+  proxender: string;
+  proxied: boolean;
+  startTime: string;
+  endTime: string;
+  duration: string;
+  depositAmount: string;
+  asset: Asset;
+  canceled: boolean;
+  contract: Contract;
+  cliff: boolean;
+  cancelable: boolean;
+}
 
 export interface ICreateSignature {
   amount: string;

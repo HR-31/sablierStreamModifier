@@ -1,9 +1,14 @@
 import Link from "next/link";
-import Forms from "../../src/components/Forms";
-import LockupLinear from "../../src/components/Forms/LockupLinear";
 import { useRouter } from "next/router";
 
 import styled from "styled-components";
+import LockupLinear from "../../src/components/Forms/LockupLinear";
+import { useAccount } from "wagmi";
+
+const NavBar = styled.div`
+  background-color: #f2f2f2;
+  padding: 15px;
+`;
 
 const StyledButton = styled.button`
   background-color: #007bff;
@@ -17,23 +22,34 @@ const StyledButton = styled.button`
   }
 `;
 
+const PageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f4f4f4;
+`;
+
 function Lockup() {
   const router = useRouter();
   const { stream } = router.query;
+  const { isConnected } = useAccount();
 
-  if (!stream) return;
-  if (typeof stream !== "string") return;
+  if (!stream || typeof stream !== "string" || !isConnected) return;
 
   const decodedObject = decodeURIComponent(stream);
   const parsedObject = JSON.parse(decodedObject);
 
   return (
-    <div>
-      <Link href="/" passHref>
-        <StyledButton>Home</StyledButton>
-      </Link>
-      <Forms stream={parsedObject} />;
-    </div>
+    <PageWrapper>
+      <NavBar>
+        <Link href="/" passHref>
+          <StyledButton>Home</StyledButton>
+        </Link>
+      </NavBar>
+      <LockupLinear stream={parsedObject} />
+    </PageWrapper>
   );
 }
 

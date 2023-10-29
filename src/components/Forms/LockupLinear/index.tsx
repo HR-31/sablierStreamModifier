@@ -5,20 +5,22 @@ import Transaction from "../../../models/Transaction";
 import useStoreForm from "./store";
 import _ from "lodash";
 import { useAccount, useWalletClient } from "wagmi";
-import { Stream } from "../../../../pages";
-import { IAddress } from "../../../types";
+
+import { IAddress, Stream } from "../../../types";
 import BigNumber from "bignumber.js";
 import { CHAIN_GOERLI_ID, contracts } from "../../../constants";
 import { maxUint256 } from "viem";
 
 const Wrapper = styled.div`
   display: flex;
-  width: 100%;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  padding: 16px;
-  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  width: 800px;
+  padding: 30px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
 const Divider = styled.div`
@@ -28,7 +30,15 @@ const Divider = styled.div`
   margin: 8px 0;
 `;
 
-const Button = styled.button``;
+const Button = styled.button`
+  background: #ff9c00;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  margin-top: 10px;
+  cursor: pointer;
+`;
 
 const Error = styled.p`
   color: ${(props) => props.theme.colors.red};
@@ -90,7 +100,6 @@ function LockupLinear({ stream }: { stream: Stream }) {
     logs: state.logs,
     update: state.api.update,
   }));
-  const globalState = useStoreForm.getState();
 
   useEffect(() => {
     const reverseConversion = (amount: BigInt, decimals: number): string => {
@@ -230,7 +239,6 @@ function LockupLinear({ stream }: { stream: Stream }) {
       <Amount />
       <Recipient />
       <Duration />
-      <Divider />
 
       <Divider />
       <Actions>

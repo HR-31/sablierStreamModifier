@@ -62,7 +62,7 @@ export function Token() {
 
   return (
     <Input
-      label={"Token"}
+      label={"Token (cannot change)"}
       id={"token"}
       value={token}
       onChange={onChange}
@@ -142,7 +142,7 @@ export function Recipient() {
 
   return (
     <Input
-      label={"Recipient Address"}
+      label={"Recipient Address (cannot change)"}
       id={"recipient"}
       value={recipient}
       onChange={onChange}
